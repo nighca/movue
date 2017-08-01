@@ -57,3 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
+# test coverage result
+__coverage__
+
+# compile result
+lib

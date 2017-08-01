@@ -1,0 +1,51 @@
+{
+  "name": "movue",
+  "version": "0.0.1",
+  "description": "Mobx integration for Vue.js.",
+  "main": "index.js",
+  "scripts": {
+    "compile": "tsc",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nighca/movue.git"
+  },
+  "keywords": [
+    "mobx",
+    "vue"
+  ],
+  "author": "nighca@live.cn",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/nighca/movue/issues"
+  },
+  "homepage": "https://github.com/nighca/movue#readme",
+  "devDependencies": {
+    "@types/jest": "^20.0.5",
+    "jest": "^20.0.4",
+    "mobx": "^3.2.2",
+    "ts-jest": "^20.0.7",
+    "typescript": "^2.4.2",
+    "vue": "^2.4.2"
+  },
+  "peerDependencies": {
+    "mobx": "^3.2.2",
+    "vue": "^2.4.2"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "/test/.*$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ],
+    "collectCoverage": true,
+    "coverageDirectory": "__coverage__",
+    "mapCoverage": true
+  }
+}
