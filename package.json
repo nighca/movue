@@ -2,9 +2,13 @@
   "name": "movue",
   "version": "0.0.1",
   "description": "Mobx integration for Vue.js.",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "lib/index.js",
+  "unpkg": "dist/index.js",
+  "typings": "lib/index.d.ts",
   "scripts": {
-    "compile": "tsc",
+    "compile": "rm -rf lib && tsc",
+    "build": "npm run compile && rm -rf dist && rollup -c",
     "test": "jest"
   },
   "repository": {
@@ -25,6 +29,7 @@
     "@types/jest": "^20.0.5",
     "jest": "^20.0.4",
     "mobx": "^3.2.2",
+    "rollup": "^0.45.2",
     "ts-jest": "^20.0.7",
     "typescript": "^2.4.2",
     "vue": "^2.4.2"

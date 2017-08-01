@@ -1,11 +1,11 @@
 import VueClass from 'vue'
 import { optionName, disposersName } from './utils'
 
-interface IMobxMethods {
+export interface IMobxMethods {
   reaction: any
 }
 
-type Disposer = () => void
+export type Disposer = () => void
 
 function install(Vue: typeof VueClass, mobxMethods: IMobxMethods) {
 

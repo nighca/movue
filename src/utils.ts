@@ -1,2 +1,2 @@
-export let optionName = 'fromStore'
+export let optionName = 'fromMobx'
 export let disposersName = '__disposers'

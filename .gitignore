@@ -60,5 +60,6 @@ typings/
 # test coverage result
 __coverage__
 
-# compile result
+# compile & build result
 lib
+dist

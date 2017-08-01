@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "module": "es6",
+    "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -12,6 +13,7 @@
       "types",
       "./node_modules/@types"
     ],
+    "declaration": true,
     "rootDir": "./src",
     "outDir": "./lib"
   },
