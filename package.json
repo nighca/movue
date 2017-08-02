@@ -37,20 +37,5 @@
   "peerDependencies": {
     "mobx": "^3.2.2",
     "vue": "^2.4.2"
-  },
-  "jest": {
-    "transform": {
-      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
-    },
-    "testRegex": "/test/.*$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "json"
-    ],
-    "collectCoverage": true,
-    "coverageDirectory": "__coverage__",
-    "mapCoverage": true
   }
 }
