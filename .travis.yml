@@ -15,4 +15,4 @@ before_script:
   - chmod +x ./cc-test-reporter
 script:
   - npm test
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then cd __coverage__ && ../cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then mv __coverage__/* ./ && ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi

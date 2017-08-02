@@ -1,4 +1,4 @@
-# Movue [![npm version](https://badge.fury.io/js/movue.svg)](https://badge.fury.io/js/movue) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Build Status](https://travis-ci.org/nighca/movue.svg?branch=master)](https://travis-ci.org/nighca/movue)
+# Movue [![npm version](https://badge.fury.io/js/movue.svg)](https://badge.fury.io/js/movue) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Build Status](https://travis-ci.org/nighca/movue.svg?branch=master)](https://travis-ci.org/nighca/movue) [![Test Coverage](https://codeclimate.com/github/nighca/movue/badges/coverage.svg)](https://codeclimate.com/github/nighca/movue/coverage)
 
 Mobx integration for Vue.js, inspired by [vue-rx](https://github.com/vuejs/vue-rx).
 
