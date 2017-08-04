@@ -2,11 +2,15 @@ import Vue from 'vue'
 import { reaction, observable, runInAction, action, computed } from 'mobx'
 import Movue, { optionName, mapFields, mapMethods } from '../src'
 
-Vue.use(Movue, { reaction })
-
 const nextTick = Vue.nextTick
 
+test('install well', () => {
+  Vue.use(Movue, { reaction })
+})
+
 test('bind mobx store to render', done => {
+  Vue.use(Movue, { reaction })
+
   const data = observable({
     foo: 1,
     bar: 2,
@@ -43,6 +47,8 @@ test('bind mobx store to render', done => {
 })
 
 test(`can use this.data in ${optionName}`, done => {
+  Vue.use(Movue, { reaction })
+
   const data = observable({
     foo: 1,
     get fooPlus() {
@@ -102,6 +108,8 @@ class Counter {
 }
 
 test('helper mapFields', () => {
+  Vue.use(Movue, { reaction })
+
   const counter = new Counter()
 
   const vm = new Vue({
@@ -118,6 +126,8 @@ test('helper mapFields', () => {
 })
 
 test('helper mapMethods', () => {
+  Vue.use(Movue, { reaction })
+
   const counter = new Counter()
 
   const vm = new Vue({
@@ -140,4 +150,40 @@ test('helper mapMethods', () => {
 
   vm.reset()
   expect(counter.num).toBe(0)
+})
+
+test('clean watchers before destroy', () => {
+  Vue.use(Movue, { reaction })
+
+  const data = observable({
+    foo: 1
+  })
+
+  const vm = new Vue({
+    [optionName]: {
+      foo() {
+        return data.foo
+      }
+    },
+    render (h) {
+      const vm: any = this
+      return h('div', vm.foo + '')
+    }
+  }).$mount()
+
+  vm.$destroy()
+})
+
+test('normal components destroy well', () => {
+  const vm = new Vue({
+    data() {
+      return { foo: 1 }
+    },
+    render (h) {
+      const vm: any = this
+      return h('div', vm.foo + '')
+    }
+  }).$mount()
+
+  vm.$destroy()
 })
