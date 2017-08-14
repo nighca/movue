@@ -20,7 +20,7 @@ Import Movue in your project and use it in Vue:
 
 ```javascript
 import Vue from 'vue'
-import Movue from '../src'
+import Movue from 'movue'
 import * as mobx from 'mobx'
 
 Vue.use(Movue, mobx)
