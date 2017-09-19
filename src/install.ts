@@ -11,25 +11,27 @@ export default function install(Vue: typeof VueClass, mobxMethods: IMobxMethods)
 
   const defineReactive = (Vue as any).util.defineReactive
 
+  function beforeCreate(this: VueClass) {
+    const vm = this
+    getFromStoreEntries(vm).forEach(({ key, compute }) => {
+      defineReactive(vm, key, null)
+    })
+  }
+
   function created(this: VueClass) {
     const vm = this
-    const fromStore = vm.$options[optionName]
-    if (!fromStore) {
+    const entries = getFromStoreEntries(vm)
+    if (entries.length <= 0) {
       return
     }
 
     const disposers: Disposer[] = vm[disposersName] = []
 
-    Object.keys(fromStore).forEach(key => {
-      const compute = fromStore[key]
+    entries.forEach(({ key, compute }) => {
       disposers.push(mobxMethods.reaction(
         () => compute.apply(vm),
         val => {
-          if (key in vm) {
-            vm[key] = val
-          } else {
-            defineReactive(vm, key, val)
-          }
+          vm[key] = val
         },
         true
       ))
@@ -47,7 +49,19 @@ export default function install(Vue: typeof VueClass, mobxMethods: IMobxMethods)
   }
 
   Vue.mixin({
+    beforeCreate,
     created,
     beforeDestroy
   })
+}
+
+function getFromStoreEntries(vm: VueClass) {
+  const fromStore = vm.$options[optionName]
+  if (!fromStore) {
+    return []
+  }
+
+  return Object.keys(fromStore).map(
+    key => ({ key, compute: fromStore[key] })
+  )
 }
