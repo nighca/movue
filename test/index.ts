@@ -94,6 +94,64 @@ test(`can use this.data in ${optionName}`, done => {
   })
 })
 
+
+test(`fields in ${optionName} can be used in watch & computed`, done => {
+  Vue.use(Movue, { reaction })
+
+  const data = observable({
+    foo: 1
+  })
+
+  const onFooChange = jest.fn()
+  const onFoobarChange = jest.fn()
+
+  const vm = new Vue({
+    data() {
+      return {
+        bar: 2
+      }
+    },
+    computed: {
+      foobar() {
+        return this.foo + this.bar
+      }
+    },
+    [optionName]: {
+      foo() {
+        return data.foo
+      }
+    },
+    watch: {
+      foo(value) {
+        onFooChange(value)
+      },
+      foobar(value) {
+        onFoobarChange(value)
+      }
+    },
+    render (h) {
+      const vm: any = this
+      return h('div', `${vm.foobar}`)
+    }
+  }).$mount()
+
+  expect(vm.$el.textContent).toBe('3')
+
+  vm.bar++
+  runInAction(() => {
+    data.foo++
+  })
+
+  nextTick(() => {
+    expect(vm.$el.textContent).toBe('5')
+    expect(onFooChange.mock.calls).toHaveLength(1)
+    expect(onFooChange.mock.calls[0][0]).toBe(2)
+    expect(onFoobarChange.mock.calls).toHaveLength(1)
+    expect(onFoobarChange.mock.calls[0][0]).toBe(5)
+    done()
+  })
+})
+
 class Counter {
   @observable num = 0
   @computed get numPlus() {
