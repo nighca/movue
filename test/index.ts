@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { reaction, observable, runInAction, action, computed } from 'mobx'
-import Movue, { optionName, mapFields, mapMethods } from '../src'
+import Movue, { mapFields, mapMethods } from '../src'
 
 const nextTick = Vue.nextTick
 
@@ -20,7 +20,7 @@ test('bind mobx store to render', done => {
   })
 
   const vm = new Vue({
-    [optionName]: {
+    fromMobx: {
       foo() {
         return data.foo
       },
@@ -46,7 +46,7 @@ test('bind mobx store to render', done => {
   })
 })
 
-test(`can use this.data in ${optionName}`, done => {
+test(`can use this.data in fromMobx`, done => {
   Vue.use(Movue, { reaction })
 
   const data = observable({
@@ -67,7 +67,7 @@ test(`can use this.data in ${optionName}`, done => {
         return this.bar + 1
       }
     },
-    [optionName]: {
+    fromMobx: {
       foobar() {
         return data.foo + this.bar
       },
@@ -95,7 +95,7 @@ test(`can use this.data in ${optionName}`, done => {
 })
 
 
-test(`fields in ${optionName} can be used in watch & computed`, done => {
+test(`fields in fromMobx can be used in watch & computed`, done => {
   Vue.use(Movue, { reaction })
 
   const data = observable({
@@ -116,7 +116,7 @@ test(`fields in ${optionName} can be used in watch & computed`, done => {
         return this.foo + this.bar
       }
     },
-    [optionName]: {
+    fromMobx: {
       foo() {
         return data.foo
       }
@@ -171,7 +171,7 @@ test('helper mapFields', () => {
   const counter = new Counter()
 
   const vm = new Vue({
-    [optionName]: {
+    fromMobx: {
       ...mapFields(counter, ['num', 'numPlus'])
     },
     render (h) {
@@ -218,7 +218,7 @@ test('clean watchers before destroy', () => {
   })
 
   const vm = new Vue({
-    [optionName]: {
+    fromMobx: {
       foo() {
         return data.foo
       }

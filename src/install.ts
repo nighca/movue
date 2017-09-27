@@ -1,11 +1,16 @@
 import VueClass from 'vue'
-import { optionName, disposersName } from './utils'
 
 export interface IMobxMethods {
   reaction: any
 }
 
 export type Disposer = () => void
+
+declare module 'vue/types/options' {
+  interface ComponentOptions<V extends VueClass> {
+    fromMobx?: { [key: string]: (this: V) => any }
+  }
+}
 
 export default function install(Vue: typeof VueClass, mobxMethods: IMobxMethods) {
 
@@ -25,7 +30,7 @@ export default function install(Vue: typeof VueClass, mobxMethods: IMobxMethods)
       return
     }
 
-    const disposers: Disposer[] = vm[disposersName] = []
+    const disposers: Disposer[] = vm['__movueDisposers__'] = []
 
     entries.forEach(({ key, compute }) => {
       disposers.push(mobxMethods.reaction(
@@ -40,7 +45,7 @@ export default function install(Vue: typeof VueClass, mobxMethods: IMobxMethods)
 
   function beforeDestroy(this: VueClass) {
     const vm = this
-    const disposers: Disposer[] = vm[disposersName]
+    const disposers: Disposer[] = vm['__movueDisposers__']
     if (disposers) {
       disposers.forEach(
         dispose => dispose()
@@ -56,7 +61,7 @@ export default function install(Vue: typeof VueClass, mobxMethods: IMobxMethods)
 }
 
 function getFromStoreEntries(vm: VueClass) {
-  const fromStore = vm.$options[optionName]
+  const fromStore = vm.$options.fromMobx
   if (!fromStore) {
     return []
   }

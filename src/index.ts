@@ -5,6 +5,5 @@ export default {
   install
 }
 
-export * from './utils'
 export * from './helpers'
 export * from './install'
