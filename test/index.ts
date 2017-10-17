@@ -183,6 +183,27 @@ test('helper mapFields', () => {
   expect(vm.$el.textContent).toBe('0|1')
 })
 
+test('helper mapFields with alias', () => {
+  Vue.use(Movue, { reaction })
+
+  const counter = new Counter()
+
+  const vm = new Vue({
+    fromMobx: {
+      ...mapFields(counter, {
+        myNum: 'num',
+        myNumPlustOne: 'numPlus'
+      })
+    },
+    render (h) {
+      const vm: any = this
+      return h('div', `${vm.myNum}|${vm.myNumPlustOne}`)
+    }
+  }).$mount()
+
+  expect(vm.$el.textContent).toBe('0|1')
+})
+
 test('helper mapMethods', () => {
   Vue.use(Movue, { reaction })
 
@@ -207,6 +228,36 @@ test('helper mapMethods', () => {
   expect(counter.num).toBe(2)
 
   vm.reset()
+  expect(counter.num).toBe(0)
+})
+
+test('helper mapMethods with alias', () => {
+  Vue.use(Movue, { reaction })
+
+  const counter = new Counter()
+
+  const vm = new Vue({
+    methods: {
+      ...mapMethods(counter, {
+        myPlus: 'plus',
+        myReset: 'reset'
+      })
+    },
+    render (h) {
+      const vm: any = this
+      return h('div', `${vm.num}|${vm.numPlus}`)
+    }
+  }).$mount()
+
+  expect(counter.num).toBe(0)
+
+  vm.myPlus()
+  expect(counter.num).toBe(1)
+
+  vm.myPlus()
+  expect(counter.num).toBe(2)
+
+  vm.myReset()
   expect(counter.num).toBe(0)
 })
 
