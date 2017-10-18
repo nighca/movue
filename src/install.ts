@@ -19,7 +19,7 @@ export default function install(Vue: typeof VueClass, mobxMethods: IMobxMethods)
   function beforeCreate(this: VueClass) {
     const vm = this
     getFromStoreEntries(vm).forEach(({ key, compute }) => {
-      defineReactive(vm, key, null)
+      defineReactive(vm, key, null, null, true)
     })
   }
 
