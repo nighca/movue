@@ -1,12 +1,12 @@
 export type PropList = string[] | { [propAlias: string]: string }
 
 function mapProps(store: object, propNames: PropList, mapProp: (store: object, propName: string) => Function): object {
-  const isArray = propNames instanceof Array;
+  const isArray = Array.isArray(propNames)
 
   return Object.keys(propNames).reduce(
     (result, key) => {
-      const propAlias = isArray ? propNames[key] : key;
-      const propName = propNames[key];
+      const propAlias = isArray ? propNames[key] : key
+      const propName = propNames[key]
 
       return Object.assign(result, {
         [propAlias]: mapProp(store, propName)
