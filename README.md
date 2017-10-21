@@ -87,7 +87,7 @@ export default {
 
 ### API Reference
 
-##### `mapFields(store: object, fieldNames: string[]): Object`
+##### `mapFields(store: object, fieldNames: string[] | {[fieldAlias: string]: string}): Object`
 
 `mapFields` do fields' map for you:
 
@@ -100,7 +100,19 @@ const fields = {
 }
 ```
 
-##### `mapMethods(store: object, methodNames: string[]): Object`
+```javascript
+const fields = mapFields(todoStore, {
+  todoList: 'todos',
+  unfinishedTodoList: 'unfinishedTodos'
+})
+// equals
+const fields = {
+  todoList() { return todoStore.todos },
+  unfinishedTodoList() { return todoStore.unfinishedTodos }
+}
+```
+
+##### `mapMethods(store: object, methodNames: string[] | {[methodAlias: string]: string}): Object`
 
 `mapMethods` do methods' map for you:
 
@@ -110,6 +122,18 @@ const methods = mapMethods(todoStore, ['addTodo', 'toggleTodo'])
 const methods = {
   addTodo: todoStore.addTodo.bind(todoStore),
   toggleTodo: todoStore.toggleTodo.bind(todoStore)
+}
+```
+
+```javascript
+const methods = mapMethods(todoStore, {
+  addTodoItem: 'addTodo',
+  checkTodoItem: 'toggleTodo'
+})
+// equals
+const methods = {
+  addTodoItem: todoStore.addTodo.bind(todoStore),
+  checkTodoItem: todoStore.toggleTodo.bind(todoStore)
 }
 ```
 
