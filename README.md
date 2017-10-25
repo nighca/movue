@@ -2,6 +2,10 @@
 
 Mobx integration for Vue.js, inspired by [vue-rx](https://github.com/vuejs/vue-rx).
 
+### Why movue
+
+[Why MobX + movue, instead of Vuex?](https://github.com/nighca/movue/issues/8)
+
 ### Install
 
 ```shell
