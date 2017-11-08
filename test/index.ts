@@ -108,7 +108,7 @@ test(`can set field to store`, done => {
       return this.foo + 1
     },
     setFoo(value) {
-      this.foo = value;
+      this.foo = value
     }
   })
 
@@ -214,11 +214,14 @@ class Counter {
   @computed get numPlus() {
     return this.num + 1
   }
+  @action setNum(value) {
+    this.num = value
+  }
   @action plus() {
-    this.num++
+    this.setNum(this.num + 1)
   }
   @action reset() {
-    this.num = 0
+    this.setNum(0)
   }
 }
 
@@ -259,6 +262,59 @@ test('helper mapFields with alias', () => {
   }).$mount()
 
   expect(vm.$el.textContent).toBe('0|1')
+})
+
+test('helper mapFields can work object notation', () => {
+  Vue.use(Movue, { reaction })
+
+  const counter = new Counter()
+
+  const vm = new Vue({
+    fromMobx: {
+      ...mapFields(counter, {
+        myNum: { get: 'num', set: 'setNum' },
+        myNumPlustOne: { get: 'numPlus' }
+      })
+    },
+    render (h) {
+      const vm: any = this
+      return h('div', `${vm.myNum}|${vm.myNumPlustOne}`)
+    }
+  }).$mount()
+
+  expect(vm.$el.textContent).toBe('0|1')
+})
+
+test('helper mapFields can work with setter', done => {
+  Vue.use(Movue, { reaction })
+
+  const counter = new Counter()
+
+  const vm = new Vue({
+    fromMobx: {
+      ...mapFields(counter, {
+        myNum: { get: 'num', set: 'setNum' },
+        myNumPlustOne: { get: 'numPlus', set(store, value) { store.setNum(value - 1) } }
+      })
+    },
+    render (h) {
+      const vm: any = this
+      return h('div', `${vm.myNum}|${vm.myNumPlustOne}`)
+    }
+  }).$mount()
+
+  expect(vm.$el.textContent).toBe('0|1')
+
+  vm.myNum++
+  nextTick(() => {
+    expect(vm.$el.textContent).toBe('1|2')
+
+    vm.myNumPlustOne = 10
+    nextTick(() => {
+      expect(vm.$el.textContent).toBe('9|10')
+      done()
+    })
+  })
 })
 
 test('helper mapMethods', () => {
