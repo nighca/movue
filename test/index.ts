@@ -21,6 +21,11 @@ test('bind mobx store to render', done => {
 
   const vm = new Vue({
     fromMobx: {
+      getterFoo: {
+        get() {
+          return data.foo
+        }
+      },
       foo() {
         return data.foo
       },
@@ -30,18 +35,18 @@ test('bind mobx store to render', done => {
     },
     render (h) {
       const vm: any = this
-      return h('div', `${vm.foo}|${vm.foobarPlus}`)
+      return h('div', `${vm.getterFoo}|${vm.foo}|${vm.foobarPlus}`)
     }
   }).$mount()
 
-  expect(vm.$el.textContent).toBe('1|4')
+  expect(vm.$el.textContent).toBe('1|1|4')
 
   runInAction(() => {
     data.foo++
   })
 
   nextTick(() => {
-    expect(vm.$el.textContent).toBe('2|5')
+    expect(vm.$el.textContent).toBe('2|2|5')
     done()
   })
 })
@@ -90,6 +95,58 @@ test(`can use this.data in fromMobx`, done => {
 
   nextTick(() => {
     expect(vm.$el.textContent).toBe('5|7')
+    done()
+  })
+})
+
+test(`can set field to store`, done => {
+  Vue.use(Movue, { reaction })
+
+  const data = observable({
+    foo: 1,
+    get fooPlus() {
+      return this.foo + 1
+    },
+    setFoo(value) {
+      this.foo = value;
+    }
+  })
+
+  const vm = new Vue({
+    data() {
+      return {
+        bar: 2
+      }
+    },
+    computed: {
+      barPlus() {
+        return this.bar + 1
+      }
+    },
+    fromMobx: {
+      foobar: {
+        get() {
+          return data.foo + this.bar
+        },
+        set(value) {
+          data.setFoo(value - this.bar)
+        }
+      },
+      foobarPlus() {
+        return data.fooPlus + this.barPlus
+      }
+    },
+    render (h) {
+      const vm: any = this
+      return h('div', `${vm.foobar}|${vm.foobarPlus}`)
+    }
+  }).$mount()
+
+  vm.foobar++
+
+  nextTick(() => {
+    expect(vm.$el.textContent).toBe('4|6')
+    expect(data.foo).toBe(2)
     done()
   })
 })
