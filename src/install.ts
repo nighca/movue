@@ -89,7 +89,7 @@ function getFromStoreEntries(vm: VueClass): FromMobxEntries[] {
   }
 
   return Object.keys(fromStore).map(key => {
-    const field = fromStore[key]
+    const field: any = fromStore[key]
     const isFieldFunction = typeof field === 'function'
     const isSetterFunction = !isFieldFunction && typeof field.set === 'function'
 
