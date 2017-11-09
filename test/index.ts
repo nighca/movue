@@ -317,6 +317,50 @@ test('helper mapFields can work with setter', done => {
   })
 })
 
+test('helper mapFields can work with this.data in complex getter and setter', done => {
+  Vue.use(Movue, { reaction })
+
+  const counter = new Counter()
+
+  const vm = new Vue({
+    data() {
+      return {
+        a: 2
+      }
+    },
+    fromMobx: {
+      ...mapFields(counter, {
+        myNum: { get: 'num' },
+        myNumPlusA: {
+          get(store) { return store.num + this.a; },
+          set(store, value) { store.setNum(value - this.a) }
+        },
+        myNumPlustOne: {
+          get: 'numPlus',
+          set(store, value) { store.setNum(value - 1) }
+        }
+      })
+    },
+    render (h) {
+      const vm: any = this
+      return h('div', `${vm.myNum}|${vm.myNumPlusA}|${vm.myNumPlustOne}`)
+    }
+  }).$mount()
+
+  expect(vm.$el.textContent).toBe('0|2|1')
+
+  vm.myNumPlusA++
+  nextTick(() => {
+    expect(vm.$el.textContent).toBe('1|3|2')
+
+    vm.myNumPlusA = 10
+    nextTick(() => {
+      expect(vm.$el.textContent).toBe('8|10|9')
+      done()
+    })
+  })
+})
+
 test('helper mapMethods', () => {
   Vue.use(Movue, { reaction })
 

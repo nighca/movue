@@ -34,7 +34,7 @@ function mapField(store: object, fieldDescription: string | FieldDescription): M
   const fieldDescriptionGet = fieldDescription.get
   let getter
   if (typeof fieldDescriptionGet === 'function') {
-    getter = () => fieldDescriptionGet(store)
+    getter = function () { return fieldDescriptionGet.call(this, store) }
   } else {
     getter = () => store[fieldDescriptionGet]
   }
@@ -42,7 +42,7 @@ function mapField(store: object, fieldDescription: string | FieldDescription): M
   const fieldDescriptionSet = fieldDescription.set
   let setter
   if (typeof fieldDescriptionSet === 'function') {
-    setter = (value) => { fieldDescriptionSet(store, value) }
+    setter = function (value) { fieldDescriptionSet.call(this, store, value) }
   } else if (typeof fieldDescriptionSet === 'string') {
     setter = (value) => { store[fieldDescriptionSet](value) }
   }
