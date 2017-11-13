@@ -1,9 +1,11 @@
+import { Getter, Setter } from './types'
+
 export type PropList<TPropType> = string[] | { [propAlias: string]: TPropType }
 export type FieldDescription = {
   get: string | ((store: object) => any),
   set?: string | ((store: object, value: any) => void)
 }
-export type MappedField = (() => any) | { get: () => any, set?: (value) => void }
+export type MappedField = Getter | { get: Getter, set?: Setter }
 export type propMaper<TPropType, TResult> = (store: object, propName: TPropType) => TResult
 
 function mapProps<TPropType, TMapResult>(
