@@ -40,7 +40,7 @@ export default function install(Vue: typeof VueClass, mobxMethods: IMobxMethods)
     const vm = this
 
     changeDetector.removeReactionList(vm)
-    getFromStoreEntries(vm).map(({ key }) => changeDetector.removeReactiveProperty(vm, key))
+    getFromStoreEntries(vm).forEach(({ key }) => changeDetector.removeReactiveProperty(vm, key))
   }
 
   Vue.mixin({
