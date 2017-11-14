@@ -1,6 +1,6 @@
 {
   "name": "movue",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "Mobx integration for Vue.js.",
   "main": "dist/index.js",
   "module": "lib/index.js",
