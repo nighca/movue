@@ -1,10 +1,8 @@
 import VueClass from 'vue'
+import ChangeDetector from './change-detector'
+import { Getter, Setter, VueComputed, FromMobxEntry, IMobxMethods } from './types'
 
-export interface IMobxMethods {
-  reaction: any
-}
-
-export type Disposer = () => void
+export { IMobxMethods }
 
 declare module 'vue/types/options' {
   interface ComponentOptions<V extends VueClass> {
@@ -14,43 +12,35 @@ declare module 'vue/types/options' {
 
 export default function install(Vue: typeof VueClass, mobxMethods: IMobxMethods) {
 
-  const defineReactive = (Vue as any).util.defineReactive
+  const changeDetector = new ChangeDetector(Vue, mobxMethods)
 
   function beforeCreate(this: VueClass) {
     const vm = this
-    getFromStoreEntries(vm).forEach(({ key, compute }) => {
-      defineReactive(vm, key, null, null, true)
-    })
+
+    vm.$options.computed = getFromStoreEntries(vm).reduce(
+      (computed, { key, set }) => {
+        changeDetector.defineReactiveProperty(vm, key)
+
+        return Object.assign(
+          computed,
+          { [key]: createComputedProperty(changeDetector, vm, key, set) }
+        )
+      },
+      vm.$options.computed || {}
+    )
   }
 
   function created(this: VueClass) {
     const vm = this
-    const entries = getFromStoreEntries(vm)
-    if (entries.length <= 0) {
-      return
-    }
 
-    const disposers: Disposer[] = vm['__movueDisposers__'] = []
-
-    entries.forEach(({ key, compute }) => {
-      disposers.push(mobxMethods.reaction(
-        () => compute.apply(vm),
-        val => {
-          vm[key] = val
-        },
-        true
-      ))
-    })
+    changeDetector.defineReactionList(vm, getFromStoreEntries(vm))
   }
 
   function beforeDestroy(this: VueClass) {
     const vm = this
-    const disposers: Disposer[] = vm['__movueDisposers__']
-    if (disposers) {
-      disposers.forEach(
-        dispose => dispose()
-      )
-    }
+
+    changeDetector.removeReactionList(vm)
+    getFromStoreEntries(vm).forEach(({ key }) => changeDetector.removeReactiveProperty(vm, key))
   }
 
   Vue.mixin({
@@ -60,13 +50,39 @@ export default function install(Vue: typeof VueClass, mobxMethods: IMobxMethods)
   })
 }
 
-function getFromStoreEntries(vm: VueClass) {
+function createComputedProperty(
+  changeDetector: ChangeDetector,
+  vm: VueClass,
+  key: string,
+  setter?: Setter
+): VueComputed {
+  const getter: Getter = () => changeDetector.getReactiveProperty(vm, key)
+
+  if (typeof setter === 'function') {
+    return {
+      get: getter,
+      set: (value) => setter.call(vm, value)
+    }
+  }
+
+  return getter
+}
+
+function getFromStoreEntries(vm: VueClass): FromMobxEntry[] {
   const fromStore = vm.$options.fromMobx
   if (!fromStore) {
     return []
   }
 
-  return Object.keys(fromStore).map(
-    key => ({ key, compute: fromStore[key] })
-  )
+  return Object.keys(fromStore).map(key => {
+    const field: any = fromStore[key]
+    const isFieldFunction = typeof field === 'function'
+    const isSetterFunction = !isFieldFunction && typeof field.set === 'function'
+
+    return {
+      key,
+      get: isFieldFunction ? field : field.get,
+      set: isSetterFunction ? field.set : null
+    }
+  })
 }

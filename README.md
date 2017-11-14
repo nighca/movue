@@ -91,7 +91,7 @@ export default {
 
 ### API Reference
 
-##### `mapFields(store: object, fieldNames: string[] | {[fieldAlias: string]: string}): Object`
+##### `mapFields(store: object, fieldNames: string[]): Object`
 
 `mapFields` do fields' map for you:
 
@@ -103,6 +103,10 @@ const fields = {
   unfinishedTodos() { return todoStore.unfinishedTodos }
 }
 ```
+
+##### `mapFields(store: object, fieldNames: {[fieldAlias: string]: string}): Object`
+
+You can use aliases for fields:
 
 ```javascript
 const fields = mapFields(todoStore, {
@@ -116,7 +120,65 @@ const fields = {
 }
 ```
 
-##### `mapMethods(store: object, methodNames: string[] | {[methodAlias: string]: string}): Object`
+##### `mapFields(store: object, fieldNames: {[fieldAlias: string]: { get: string, set?: string }}): Object`
+
+Also you can specify a setter for the field:
+
+```javascript
+const fields = mapFields(todoStore, {
+  todoList: {
+    get: 'todos'
+  },
+  unfinishedTodoList: 'unfinishedTodos',
+  newTodoItemName: {
+    get: 'newItemName',
+    set: 'setNewItemName'
+  }
+})
+// equals
+const fields = {
+  todoList() { return todoStore.todos },
+  unfinishedTodoList() { return todoStore.unfinishedTodos },
+  newTodoItemName: {
+    get() { return todoStore.newItemName },
+    set(value) { todoStore.setNewItemName(value) }
+  }
+}
+```
+
+##### `mapFields(store: object, fieldNames: {[fieldAlias: string]: { get: (store: object) => any, set?: (store: object, value: any) => void }}): Object`
+
+You can specify a complex setter and getter for the field:
+
+```javascript
+const fields = mapFields(todoStore, {
+  todoList: {
+    get: 'todos'
+  },
+  unfinishedTodoList: 'unfinishedTodos',
+  newTodoItemName: {
+    get(store) {
+      // store === todoStore
+      return store.newItemName
+    },
+    set(store, value) {
+      // store === todoStore
+      store.setNewItemName(value)
+    }
+  }
+})
+// equals
+const fields = {
+  todoList() { return todoStore.todos },
+  unfinishedTodoList() { return todoStore.unfinishedTodos },
+  newTodoItemName: {
+    get() { return todoStore.newItemName },
+    set(value) { todoStore.setNewItemName(value) }
+  }
+}
+```
+
+##### `mapMethods(store: object, methodNames: string[]): Object`
 
 `mapMethods` do methods' map for you:
 
@@ -128,6 +190,10 @@ const methods = {
   toggleTodo: todoStore.toggleTodo.bind(todoStore)
 }
 ```
+
+##### `mapMethods(store: object, methodNames: {[methodAlias: string]: string}): Object`
+
+You can use aliases for methods:
 
 ```javascript
 const methods = mapMethods(todoStore, {
