@@ -51,7 +51,7 @@ const todoStore = observable({
 export default {
   data() {/* ... */},
   computed: {/* ... */},
-  // you should only use data from mobx store in `fromMobx` fields
+  // you should use data from mobx store only in `fromMobx` fields
   fromMobx: {
     unfinishedTodos() {
       return todoStore.unfinishedTodos
