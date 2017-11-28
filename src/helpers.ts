@@ -66,3 +66,17 @@ function mapMethod(store: object, methodName: string): Function {
 export function mapMethods(store: object, methodNames: PropList<string>): object {
   return mapProps(store, methodNames, mapMethod)
 }
+
+// helper method to use movue with vue-class-component
+// It's not a good idea to introduce vue-class-component as either dependencies or peerDependencies,
+// So we need to keep this method's logic compatible with vue-class-component's decorator logic.
+// https://github.com/vuejs/vue-class-component/blob/2bc36c50551446972d4b423b2c69f9f6ebf21770/src/util.ts#L17
+export function FromMobx(target: any, key: string) {
+  const Ctor = target.constructor
+  const decorators = Ctor.__decorators__ = Ctor.__decorators__ || []
+  decorators.push(options => {
+    options.fromMobx = options.fromMobx || {}
+    options.fromMobx[key] = options.computed[key]
+    delete options.computed[key]
+  })
+}

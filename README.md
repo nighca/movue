@@ -1,6 +1,6 @@
 # Movue [![npm version](https://badge.fury.io/js/movue.svg)](https://badge.fury.io/js/movue) [![Build Status](https://travis-ci.org/nighca/movue.svg?branch=master)](https://travis-ci.org/nighca/movue) [![Coverage Status](https://coveralls.io/repos/github/nighca/movue/badge.svg?branch=master)](https://coveralls.io/github/nighca/movue?branch=master) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-Mobx integration for Vue.js, inspired by [vue-rx](https://github.com/vuejs/vue-rx).
+MobX integration for Vue.js, inspired by [vue-rx](https://github.com/vuejs/vue-rx).
 
 ### Why movue
 
@@ -30,7 +30,7 @@ import * as mobx from 'mobx'
 Vue.use(Movue, mobx)
 ```
 
-You can pass the min parts of Mobx to reduce bundle size:
+You can pass the min parts of MobX to reduce bundle size:
 
 ```javascript
 import { reaction } from 'mobx'
@@ -38,20 +38,23 @@ import { reaction } from 'mobx'
 Vue.use(Movue, { reaction })
 ```
 
-Now you can use Mobx store in your Vue component:
+Now you can use data from MobX store in your Vue component:
 
 ```javascript
+// given MobX store
 const todoStore = observable({
   todos: [],
   get unfinishedTodos() {/* ... */},
   addTodo: action(function() {/* ... */}),
   toggleTodo: action(function() {/* ... */})
+  setTodos: action(function() {/* ... */})
 })
 
+// given vue component
 export default {
   data() {/* ... */},
   computed: {/* ... */},
-  // you should use data from mobx store only in `fromMobx` fields
+  // you should use data from MobX store only in `fromMobx` properties
   fromMobx: {
     unfinishedTodos() {
       return todoStore.unfinishedTodos
@@ -65,7 +68,7 @@ export default {
 }
 ```
 
-Fields defined in `fromMobx` can be used in the template or other parts of viewModel just like normal `computed` fields:
+Properties defined in `fromMobx` can be used in the template or other parts of viewModel just like normal Vue [`computed`](https://vuejs.org/v2/guide/computed.html#Computed-Properties) properties:
 
 ```html
 <template>
@@ -73,18 +76,58 @@ Fields defined in `fromMobx` can be used in the template or other parts of viewM
 </template>
 ```
 
+Like `computed` properties, we can define getter & setter for `fromMobx` properties:
+
+```javascript
+export default {
+  fromMobx: {
+    todos: {
+      // getter
+      get() {
+        return todoStore.todos
+      },
+      // setter
+      set(todos) {
+        todoStore.setTodos(todos)
+      }
+    }
+  }
+}
+```
+
 You can use helper methods to simplify your code:
 
 ```javascript
 import { mapFields, mapMethods } from 'movue'
+
 export default {
-  data() {/* ... */},
-  computed: {/* ... */},
   fromMobx: mapFields(todoStore, ['todos', 'unfinishedTodos']),
   methods: {
     // `...` requires object spread syntax support
     ...mapMethods(todoStore, ['addTodo', 'toggleTodo']),
     someOtherMethod() {/* ... */}
+  }
+}
+```
+
+movue works well with [vue-class-component](https://github.com/vuejs/vue-class-component):
+
+```javascript
+import { FromMobx } from 'movue'
+
+@Component({/* ... */})
+class Todo extends Vue {
+  // get todos
+  @FromMobx get todos() {
+    return todoStore.todos
+  }
+  // you don't need decorator for setters
+  set todos(todos) {
+    todoStore.setTodos(todos)
+  }
+  // you can also set value with a component method
+  setTodos(todos) {
+    todoStore.setTodos(todos)
   }
 }
 ```
@@ -204,6 +247,19 @@ const methods = mapMethods(todoStore, {
 const methods = {
   addTodoItem: todoStore.addTodo.bind(todoStore),
   checkTodoItem: todoStore.toggleTodo.bind(todoStore)
+}
+```
+
+##### `FromMobx(target: Vue, key: string): void`
+
+`FromMobx` helps to use movue together with [vue-class-component](https://github.com/vuejs/vue-class-component). You should use `FromMobx` as decorator for class property accessors:
+
+```javascript
+@Component({/* ... */})
+class Todo extends Vue {
+  @FromMobx get todos() {
+    return todoStore.todos
+  }
 }
 ```
 
