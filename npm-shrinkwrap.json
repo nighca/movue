@@ -1,6 +1,6 @@
 {
   "name": "movue",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -2535,6 +2535,10 @@
     },
     "vue": {
       "version": "2.4.2",
+      "dev": true
+    },
+    "vue-class-component": {
+      "version": "6.1.0",
       "dev": true
     },
     "walker": {
