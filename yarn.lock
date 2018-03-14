@@ -1543,9 +1543,9 @@ mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
-mobx@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-3.2.2.tgz#aa671459bededfd9880c948889a3f62bce09279c"
+mobx@>=3.2.2:
+  version "4.0.1"
+  resolved "http://registry.npm.taobao.org/mobx/download/mobx-4.0.1.tgz#321945580f7d3bf7b1f60ddaa1d623835683b5a2"
 
 ms@2.0.0:
   version "2.0.0"

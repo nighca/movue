@@ -34,7 +34,9 @@ export default class ChangeDetector {
     const reactivePropertyList: Disposer[] = fromMobxEntries.map(({ key, get }) => {
       const updateReactiveProperty = value => { this.updateReactiveProperty(vm, key, value) }
 
-      return this.mobxMethods.reaction(() => get.call(vm), updateReactiveProperty, true)
+      return this.mobxMethods.reaction(() => get.call(vm), updateReactiveProperty, {
+        fireImmediately: true
+      })
     })
 
     this.changeDetector[reactivePropertyListKey] = reactivePropertyList

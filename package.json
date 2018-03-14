@@ -29,7 +29,7 @@
     "@types/jest": "^20.0.5",
     "coveralls": "^2.13.1",
     "jest": "^20.0.4",
-    "mobx": "^3.2.2",
+    "mobx": ">=3.2.2",
     "rollup": "^0.45.2",
     "ts-jest": "^20.0.7",
     "typescript": "^2.4.2",
@@ -37,7 +37,7 @@
     "vue-class-component": "^6.0.0"
   },
   "peerDependencies": {
-    "mobx": "^3.2.2",
+    "mobx": ">=3.2.2",
     "vue": "^2.4.2"
   }
 }
