@@ -69,7 +69,14 @@ function createComputedProperty(
 }
 
 function getFromStoreEntries(vm: VueClass): FromMobxEntry[] {
-  const fromStore = vm.$options.fromMobx
+  let fromStore = vm.$options.fromMobx
+  if (vm.$options.mixins) {
+    var fromStoreNew = vm.$options.mixins
+      .map(mixin => mixin.fromMobx)
+      .reduce((accum, mobx) => mobx ? Object.assign({}, accum, mobx) : accum, {})
+    fromStore = Object.assign({}, fromStore, fromStoreNew)
+  }
+
   if (!fromStore) {
     return []
   }
