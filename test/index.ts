@@ -454,7 +454,7 @@ test('normal components destroy well', () => {
   vm.$destroy()
 })
 
-test('fromMobx attributes pulled from mixins', () => {
+test('fromMobx attributes pulled from mixin', () => {
   Vue.use(Movue)
 
   const data = observable({
@@ -483,6 +483,50 @@ test('fromMobx attributes pulled from mixins', () => {
   }).$mount()
 
   expect(vm.foo).toBe(1)
+
+  vm.$destroy()
+})
+
+test('fromMobx attributes pulled from mixins', () => {
+  Vue.use(Movue)
+
+  const data = observable({
+    foo: 1
+  })
+
+  const mixin1 = {
+    fromMobx: {
+      foo () {
+        return data.foo
+      },
+      fooPlus () {
+        return data.foo
+      }
+    }
+  }
+
+  const mixin2 = {
+    fromMobx: {
+      fooPlus () {
+        return data.foo + 1
+      },
+      fooPlusPlus () {
+        return data.foo + 2
+      }
+    }
+  }
+
+  const vm = new Vue({
+    mixins: [mixin1, mixin2],
+    render (h) {
+      const vm: any = this
+      return h('div', `${vm.value}|${vm.fooPlus}`)
+    }
+  }).$mount()
+
+  expect(vm.foo).toBe(1)
+  expect(vm.fooPlus).toBe(2)
+  expect(vm.fooPlusPlus).toBe(3)
 
   vm.$destroy()
 })
