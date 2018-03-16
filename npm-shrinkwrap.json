@@ -1,6 +1,6 @@
 {
   "name": "movue",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
@@ -2459,7 +2459,7 @@
       }
     },
     "typescript": {
-      "version": "2.4.2",
+      "version": "2.7.2",
       "dev": true
     },
     "uglify-js": {
