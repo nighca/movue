@@ -4,6 +4,8 @@
 
 MobX integration for Vue.js, inspired by [vue-rx](https://github.com/vuejs/vue-rx).
 
+Movue aims for providing simple and reliable integration between Mobx and Vue.js, which sometimes means [less convenience](https://github.com/nighca/movue/issues/16). You may want to try [mobx-vue](https://github.com/mobxjs/mobx-vue) if you are facing more complex situation. :)
+
 ### Why movue
 
 [Why MobX + movue, instead of Vuex?](https://github.com/nighca/movue/issues/8)
