@@ -39,5 +39,8 @@
   "peerDependencies": {
     "mobx": ">=3.2.2",
     "vue": "^2.4.2"
+  },
+  "resolutions": {
+    "coveralls/request/tunnel-agent": "0.6.0"
   }
 }
