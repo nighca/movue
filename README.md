@@ -1,6 +1,8 @@
-<img src="https://nighca.tristana.cc/movue-2.png" alt="logo" height="120" align="right" />
-
 # Movue [![npm version](https://badge.fury.io/js/movue.svg)](https://badge.fury.io/js/movue) [![Build Status](https://travis-ci.org/nighca/movue.svg?branch=master)](https://travis-ci.org/nighca/movue) [![Coverage Status](https://coveralls.io/repos/github/nighca/movue/badge.svg?branch=master)](https://coveralls.io/github/nighca/movue?branch=master) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+### Deprecated: This project is not maintained any longer. Since there is an official solution for MobX-Vue.js binding: [mobx-vue](https://github.com/mobxjs/mobx-vue), you may want to check that.
+
+------
 
 MobX integration for Vue.js, inspired by [vue-rx](https://github.com/vuejs/vue-rx).
 
